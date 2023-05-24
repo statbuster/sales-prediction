@@ -80,4 +80,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - The R community for their invaluable packages and support.
 he data scientists at BigMart have collected sales data for 1559 products across 10 stores in different cities for the year 2013. Now each product has certain attributes that sets it apart from other products. Same is the case with each store.
 
---date="2023-05-23T07:09:58-08:00"
+--date="2023-05-24T07:09:58-08:00"
