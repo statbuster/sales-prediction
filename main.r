@@ -14,7 +14,7 @@ library(caret)
 
 train = fread("./sales-prediction/data/train.csv")
 test = fread("./sales-prediction/data/test.csv")
-submission = fread("data/sample_submission.csv")
+submission = fread("./sales-prediction/data/sample_submission.csv")
 
 # Dimension of the data
 
@@ -179,3 +179,29 @@ test[,Item_Outlet_Sales:= NULL]
 
 cor_train <- cor(train[,-c("Item_Identifier")])
 corrplot(cor_train, method = "pie", type="lower", tl.cex = 0.9)
+
+
+################  Model Building  #################
+
+# Linear Regression score 1202.33
+
+linear_reg_model <- lm(Item_Outlet_Sales ~ ., data = train[,-c("Item_Identifier")])
+
+submission$Item_Outlet_Sales <- predict(linear_reg_model, test[,-c("Item_Identifier")])
+
+write.csv(submission, "./sales-prediction/linear_reg_model.csv", row.names = FALSE)
+
+
+# Lasso Regression 1202.26
+
+set.seed(1234)
+control <- trainControl(method='cv', number=5)
+Grid <- expand.grid(alpha=1, lambda=seq(0.001,0.1,by=0.0002))
+lasso_linear_reg_model <- train(x = train[,-c("Item_Identifier")], y = train$Item_Outlet_Sales, method = "glmnet", trControl = control, tuneGrid = Grid)
+
+# Ridge Regression
+
+set.seed(1235)
+control <- trainControl(method='cv', number=5)
+Grid <- expand.grid(alpha=0, lambda=seq(0.001,0.1,by=0.0002))
+ridge_linear_reg_model <- train(x = train[,-c("Item_Identifier")], y = train$Item_Outlet_Sales, method = "glmnet", trControl = control, tuneGrid = Grid)
